@@ -142,7 +142,7 @@ class SetupController extends Controller
 
     public function lastStep(Request $request)
     {
-        ini_set('max_execution_time', 600); //600 seconds = 10 minutes 
+        ini_set('max_execution_time', 600); //600 seconds = 10 minutes
 
         try {
             $this->changeEnv([
@@ -172,12 +172,12 @@ class SetupController extends Controller
 
             
         } catch (\Exception $e) {
-            
+
             return $e->getMessage();
-            
+
             return 'Something went wrong';
         }
-        
+
         return view('setup.finishedSetup');
     }
 
