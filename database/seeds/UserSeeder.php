@@ -17,13 +17,13 @@ class UserSeeder extends Seeder
         DB::table('users')->insert(
             array(
                 'id' => 1,
-                'firstname' => 'William',
-                'lastname' => 'Castillo',
-                'username' => 'William Castillo',
-                'email' => 'admin@example.com',
+                'firstname' => 'Dawoud',
+                'lastname' => 'Colley',
+                'username' => 'Dawoud Colley',
+                'email' => 'admin@harcent.com',
                 'password' => Hash::make('password'),
                 'avatar' => 'no_avatar.png',
-                'phone' => '0123456789',
+                'phone' => '2448273',
                 'role_id' => 1,
                 'statut' => 1,
             )
