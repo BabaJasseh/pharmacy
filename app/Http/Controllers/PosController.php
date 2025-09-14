@@ -34,7 +34,9 @@ class PosController extends BaseController
         $this->authorizeForUser($request->user('api'), 'Sales_pos', Sale::class);
 
         request()->validate([
-            'client_id' => 'required',
+            'customer.name' => 'required|string|max:255',
+            'customer.phone' => 'required|string|max:255',
+            'customer.adresse' => 'required|string|max:255',
             'warehouse_id' => 'required',
             'payment.amount' => 'required',
         ]);
@@ -43,12 +45,28 @@ class PosController extends BaseController
             $helpers = new helpers();
             $role = Auth::user()->roles()->first();
             $view_records = Role::findOrFail($role->id)->inRole('record_view');
+
+            // Create or find client based on customer data
+            $client = Client::firstOrCreate(
+                [
+                    'phone' => $request->customer['phone']
+                ],
+                [
+                    'name' => $request->customer['name'],
+                    'adresse' => $request->customer['adresse'],
+                    'email' => $request->customer['phone'] . '@pos.local', // Generate email from phone
+                    'country' => 'Gambia',
+                    'city' => $request->customer['adresse'],
+                    'code' => 'POS-' . $request->customer['phone'] . '-' . time(), // Generate unique code
+                ]
+            );
+
             $order = new Sale;
 
             $order->is_pos = 1;
             $order->date = Carbon::now();
             $order->Ref = app('App\Http\Controllers\SalesController')->getNumberOrder();
-            $order->client_id = $request->client_id;
+            $order->client_id = $client->id;
             $order->warehouse_id = $request->warehouse_id;
             $order->tax_rate = $request->tax_rate;
             $order->TaxNet = $request->TaxNet;
@@ -132,10 +150,10 @@ class PosController extends BaseController
 
                 if ($request['amount'] > 0) {
                     if ($request->payment['Reglement'] == 'credit card') {
-                        $Client = Client::whereId($request->client_id)->first();
+                        $Client = $client; // Use the client we created/found
                         Stripe\Stripe::setApiKey(config('app.STRIPE_SECRET'));
 
-                        $PaymentWithCreditCard = PaymentWithCreditCard::where('customer_id', $request->client_id)->first();
+                        $PaymentWithCreditCard = PaymentWithCreditCard::where('customer_id', $client->id)->first();
                         if (!$PaymentWithCreditCard) {
                             // Create a Customer
                             $customer = \Stripe\Customer::create([
@@ -176,7 +194,7 @@ class PosController extends BaseController
                             'payment_statut' => $payment_statut,
                         ]);
 
-                        $PaymentCard['customer_id'] = $request->client_id;
+                        $PaymentCard['customer_id'] = $client->id;
                         $PaymentCard['payment_id'] = $PaymentSale->id;
                         $PaymentCard['charge_id'] = $charge->id;
                         PaymentWithCreditCard::create($PaymentCard);
@@ -319,7 +337,6 @@ class PosController extends BaseController
         $this->authorizeForUser($request->user('api'), 'Sales_pos', Sale::class);
 
         $warehouses = Warehouse::where('deleted_at', '=', null)->get(['id', 'name']);
-        $clients = Client::where('deleted_at', '=', null)->get(['id', 'name']);
         $settings = Setting::where('deleted_at', '=', null)->first();
         // $pos_settings = PosSetting::where('deleted_at', '=', null)->first();
         if ($settings->warehouse_id) {
@@ -332,15 +349,6 @@ class PosController extends BaseController
             $defaultWarehouse = '';
         }
 
-        if ($settings->client_id) {
-            if (Client::where('id', $settings->client_id)->where('deleted_at', '=', null)->first()) {
-                $defaultClient = $settings->client_id;
-            } else {
-                $defaultClient = '';
-            }
-        } else {
-            $defaultClient = '';
-        }
         $categories = Category::where('deleted_at', '=', null)->get(['id', 'name']);
         $brands = Brand::where('deleted_at', '=', null)->get();
         $stripe_key = config('app.STRIPE_KEY');
@@ -350,8 +358,6 @@ class PosController extends BaseController
             'brands' => $brands,
             // 'pos_settings' => $pos_settings,
             'defaultWarehouse' => $defaultWarehouse,
-            'defaultClient' => $defaultClient,
-            'clients' => $clients,
             'warehouses' => $warehouses,
             'categories' => $categories,
         ]);
