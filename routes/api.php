@@ -214,7 +214,18 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------- Sales Return --------------------------\\
     //------------------------------------------------------------------\\
 
-    Route::resource('returns/sale', 'SalesReturnController');
+    Route::resource('returns/sale', 'SalesReturnController')->names(
+        [
+            'index' => 'returns_sale.index', // Rename index route
+            'create' => 'returns_sale.create',
+            'store' => 'returns_sale.store',
+            'show' => 'returns_sale.show',
+            'edit' => 'returns_sale.edit',
+            'update' => 'returns_sale.update',
+            'destroy' => 'returns_sale.destroy',
+        ]
+        );
+
     Route::post('returns/sale/send/email', 'SalesReturnController@Send_Email');
     Route::post('returns/sale/send/sms', 'SalesReturnController@Send_SMS');
     Route::get('returns/sale/export/Excel', 'SalesReturnController@exportExcel');
@@ -224,7 +235,18 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------- Purchases Return --------------------------\\
     //------------------------------------------------------------------\\
 
-    Route::resource('returns/purchase', 'PurchasesReturnController');
+    Route::resource('returns/purchase', 'PurchasesReturnController')->names(
+        [
+            'index' => 'returns_purchase.index', // Rename index route
+            'create' => 'returns_purchase.create',
+            'store' => 'returns_purchase.store',
+            'show' => 'returns_purchase.show',
+            'edit' => 'returns_purchase.edit',
+            'update' => 'returns_purchase.update',
+            'destroy' => 'returns_purchase.destroy',
+        ]
+    );
+
     Route::post('returns/purchase/send/email', 'PurchasesReturnController@Send_Email');
     Route::post('returns/purchase/send/sms', 'PurchasesReturnController@Send_SMS');
     Route::get('returns/purchase/export/Excel', 'PurchasesReturnController@exportExcel');
@@ -234,7 +256,17 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------- Payment Sale Returns --------------------------\\
     //--------------------------------------------------------------------------------\\
 
-    Route::resource('payment/returns_sale', 'PaymentSaleReturnsController');
+    Route::resource('payment/returns_sale', 'PaymentSaleReturnsController')->names(
+        [
+            'index' => 'payment_returns_sale.index', // Rename index route
+            'create' => 'payment_returns_sale.create',
+            'store' => 'payment_returns_sale.store',
+            'show' => 'payment_returns_sale.show',
+            'edit' => 'payment_returns_sale.edit',
+            'update' => 'payment_returns_sale.update',
+            'destroy' => 'payment_returns_sale.destroy',
+        ]
+    );
     Route::get('payment/returns_sale/Number/order', 'PaymentSaleReturnsController@getNumberOrder');
     Route::get('payment/returns_sale/export/Excel', 'PaymentSaleReturnsController@exportExcel');
     Route::post('payment/returns_sale/send/email', 'PaymentSaleReturnsController@SendEmail');
@@ -243,7 +275,17 @@ Route::middleware(['auth:api', 'Is_Active'])->group(function () {
     //------------------------------- Payments Purchase Returns --------------------------\\
     //---------------------------------------------------------------------------------------\\
 
-    Route::resource('payment/returns_purchase', 'PaymentPurchaseReturnsController');
+    Route::resource('payment/returns_purchase', 'PaymentPurchaseReturnsController')->names(
+        [
+            'index' => 'payment_returns_purchase.index', // Rename index route
+            'create' => 'payment_returns_purchase.create',
+            'edit' => 'payment_returns_purchase.edit',
+            'update' => 'payment_returns_purchase.update',
+            'destroy' => 'payment_returns_purchase.destroy',
+            'store' => 'payment_returns_purchase.store',
+            'show' => 'payment_returns_purchase.show',
+        ]
+    );
     Route::get('payment/returns_purchase/Number/Order', 'PaymentPurchaseReturnsController@getNumberOrder');
     Route::get('payment/returns_purchase/export/Excel', 'PaymentPurchaseReturnsController@exportExcel');
     Route::post('payment/returns_purchase/send/email', 'PaymentPurchaseReturnsController@SendEmail');

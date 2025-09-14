@@ -24,7 +24,7 @@
                     <div>
                         <div>
                             <p class="m-0">
-                                &copy; 2024 {{ $t("developed_by") }}
+                                &copy; 2025 {{ $t("developed_by") }}
                                 {{ currentUser.developed_by }}
                             </p>
                             <p class="m-0">All rights reserved - v3.7.0</p>

@@ -20,11 +20,11 @@ class SettingSeeder extends Seeder
                 'currency_id' => 1,
                 'client_id' => 1,
                 'warehouse_id' => Null,
-                'CompanyName' => 'Stocky',
+                'CompanyName' => 'Harcent',
                 'CompanyPhone' => '6315996770',
                 'CompanyAdress' => '3618 Abia Martin Drive',
-                'footer' => 'Stocky - Ultimate Inventory With POS',
-                'developed_by' => 'Stocky',
+                'footer' => 'Harcent - Ultimate Inventory With POS',
+                'developed_by' => 'Harcent',
                 'logo' => 'logo-default.png',
             )
             
